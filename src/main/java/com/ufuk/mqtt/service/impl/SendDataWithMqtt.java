@@ -1,6 +1,8 @@
 package com.ufuk.mqtt.service.impl;
 
+import com.hivemq.client.mqtt.mqtt3.Mqtt3AsyncClient;
 import com.ufuk.mqtt.service.SendDataWithMqttService;
+import java.io.IOException;
 import java.sql.Timestamp;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
@@ -9,13 +11,13 @@ import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.eclipse.paho.client.mqttv3.MqttPersistenceException;
 import org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.stereotype.Service;
 
 
-@Service("mqtt")
+@Service("mqttPaho")
 @Slf4j
 public class SendDataWithMqtt implements SendDataWithMqttService {
 
@@ -36,9 +38,11 @@ public class SendDataWithMqtt implements SendDataWithMqttService {
 
   int qos = 0;
 
+  private Mqtt3AsyncClient mqtt3AsyncClient;
+
   @Override
   public void startConnectionAndSendDataWithMqtt() {
-    log.info("trying to start mqtt protocol");
+    log.info("trying to start mqtt protocol via paho ");
 
     String tmpDir = System.getProperty("java.io.tmpdir");
     MqttDefaultFilePersistence dataStore = new MqttDefaultFilePersistence(tmpDir);
@@ -47,7 +51,7 @@ public class SendDataWithMqtt implements SendDataWithMqttService {
 
       conOpt = new MqttConnectOptions();
       conOpt.setCleanSession(true);
-
+      log.info("dataStore :  " +  dataStore);
       client = new MqttClient(brokerUrl, MqttClient.generateClientId(), dataStore);
 
       client.setCallback(new MqttCallback() {
@@ -91,7 +95,6 @@ public class SendDataWithMqtt implements SendDataWithMqttService {
       }
       client.connect(conOpt);
       log.info("Successfully connected!");
-
 
     } catch (MqttException e) {
       e.printStackTrace();

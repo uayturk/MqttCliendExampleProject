@@ -16,6 +16,6 @@ public class MqttImpl implements MqttRunService {
   @Override
   public void publish() throws MqttException {
     //sendDataWithMqtt.startConnectionAndSendDataWithMqtt();
-    sendDataWithMqtt.publish("field1=10");
+    sendDataWithMqtt.publish("field1=23");
   }
 }
