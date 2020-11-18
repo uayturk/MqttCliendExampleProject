@@ -14,11 +14,11 @@ When you done,you'll get your own Write/Read API keys ans Channel ID. Now you re
 
 If you wanna change default configuration,parameters set in src/main/resources/application.properties you need to give a new properties file with the following parameter;
 
-```java -jar target/assessment-1.0.0-SNAPSHOT.jar --spring.config.location=file:////your_home/your_path/your_application.properties```
+```java -jar target/assessment-1.0.0-SNAPSHOT.jar --spring.config.location=file:/your_home/your_path/your_application.properties```
 
 ***Swagger UI***
 
-<br/>By default this assesment will be executed on 8089 port and you'll see the entire endpoints from http://localhost:8089/swagger-ui.html
+<br/>By default this assesment will be executed on 8089 port and you'll see the entire endpoints from http://localhost:8089/mqtt/swagger-ui.html#/mqtt-controller
 
 
 ***IDE***
