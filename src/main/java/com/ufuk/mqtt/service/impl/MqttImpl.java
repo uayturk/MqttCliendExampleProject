@@ -20,12 +20,12 @@ public class MqttImpl implements MqttRunService {
   @Override
   public void publish() throws MqttException {
     //sendDataWithMqtt.startConnectionAndSendDataWithMqtt();
-    sendDataWithMqtt.publish("field1=34");
+    sendDataWithMqtt.publish("field1=78");
   }
 
   //publish for HiveMQ mqtt
   @Override
   public void publishHiveMQ() throws MqttException {
-    sendDataWithMqttViaHiveMQ.publishHiveMQ("field1=34");
+    sendDataWithMqttViaHiveMQ.publishHiveMQ("This is Ufuk test publish message for HiveMQ");
   }
 }

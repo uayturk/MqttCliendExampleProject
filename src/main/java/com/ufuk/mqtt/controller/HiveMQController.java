@@ -29,15 +29,16 @@ public class HiveMQController {
   }
 
 
-  @RequestMapping(value = "/createClientHiveMQ", method = {RequestMethod.POST}, produces = "application/json")
+  @RequestMapping(value = "/createClientAndConnectHiveMQ", method = {RequestMethod.POST}, produces = "application/json")
   @ResponseBody
-  @ApiOperation(value = "Necessary doc is the below for createClientHiveMQ.\n",
-      notes = "createClientHiveMQ method is creating client for HiveMQ mqtt .\n "
+  @ApiOperation(value = "Necessary doc is the below for createClientAndConnectHiveMQ.\n",
+      notes = "createClientAndConnectHiveMQ method is creating client for HiveMQ mqtt .\n "
   )
-  public void createClientHiveMQ() throws IOException, JSONException {
-    sendDataWithMqttViaHiveMQService.createClientHiveMQ();
+  public void createClientAndConnectHiveMQ() throws IOException, JSONException {
+    sendDataWithMqttViaHiveMQService.createClientAndConnectHiveMQ();
   }
 
+/*
   @RequestMapping(value = "/connect", method = {RequestMethod.POST}, produces = "application/json")
   @ResponseBody
   @ApiOperation(value = "Necessary doc is the below for connect.\n",
@@ -46,6 +47,7 @@ public class HiveMQController {
   public void connect(Mqtt3AsyncClient client) throws Exception {
     sendDataWithMqttViaHiveMQService.connect(client);
   }
+*/
 
   @RequestMapping(value = "/publishHiveMQ", method = {RequestMethod.POST}, produces = "application/json")
   @ResponseBody

@@ -1,11 +1,14 @@
 package com.ufuk.mqtt.service.impl;
 
 
+import com.hivemq.client.internal.mqtt.message.MqttMessage;
 import com.hivemq.client.mqtt.MqttClient;
 import com.hivemq.client.mqtt.datatypes.MqttQos;
 import com.hivemq.client.mqtt.mqtt3.Mqtt3AsyncClient;
+import com.hivemq.client.mqtt.mqtt5.message.Mqtt5MessageType;
 import com.ufuk.mqtt.service.SendDataWithMqttViaHiveMQService;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.sql.Timestamp;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
@@ -22,17 +25,17 @@ import org.springframework.stereotype.Service;
 public class SendDataWithMqttViaHiveMQ implements SendDataWithMqttViaHiveMQService {
 
 
-  @Value("${connection.port}")
-  int port;
+  @Value("${connection.portHiveMq}")
+  int portHiveMq;
 
   @Value("${connection.brokerUrlHiveMq}")
   String brokerUrlHiveMq;
 
-  @Value("${connection.channel}")
-  String channel;
+  @Value("${connection.channelHiveMq}")
+  String channelHiveMq;
 
-  @Value("${connection.clientId}")
-  String clientId;
+  @Value("${connection.clientIdHiveMq}")
+  String clientIdHiveMq;
 
   int qos = 0;
 
@@ -42,59 +45,43 @@ public class SendDataWithMqttViaHiveMQ implements SendDataWithMqttViaHiveMQServi
 
   // Source :  https://www.hivemq.com/blog/mqtt-client-library-enyclopedia-hivemq-mqtt-client/
 
-  //Creating the Client
   @Override
-  public Mqtt3AsyncClient createClientHiveMQ() throws IOException, JSONException {
+  public void createClientAndConnectHiveMQ() throws IOException, JSONException {
     log.info("trying to start mqtt protocol via HiveMQ ");
 
     try {
+      //Creating the Client
       client = MqttClient.builder()
           .useMqttVersion3()
           .identifier(UUID.randomUUID().toString()) //
           .serverHost(brokerUrlHiveMq)
-          .serverPort(port)
+          .serverPort(portHiveMq)
           //.sslConfig(sslConfig)
           .buildAsync();
       log.info("Successfully create client. " + client);
 
-      log.info("trying to connect and subscribe via HiveMQ ");
-      client.connectWith().send().whenComplete((mqtt3ConnAck, throwable) -> {
-        if (throwable != null) {
-          connectFlag = false;
-          log.info("Error during connect!");
-          throwable.printStackTrace();
-        } else {
-          //Subscribe
-          log.info("trying to make subscribe");
-          connectFlag = true;
-          client.subscribeWith()
-              .topicFilter(UUID.randomUUID().toString())
-              .callback(publish -> {
-                log.info("received" + publish);
-              })
-              .send()
-              .whenComplete((subAck, throwableq) -> {
-                if (throwableq != null) {
-                  throwableq.printStackTrace();
-                } else {
-                  log.info("Successfully subscribed");
-                }
-              });
-        }
-      });
+      //Creat connection
+      log.info("trying to connect via HiveMQ ");
+      client.connect()
+          .whenComplete((connAck, throwable) -> {
+            if (throwable != null) {
+              log.info("Error during connect!");
+              throwable.printStackTrace();
+            } else {
+              // Setup subscribes or start publishing if it is necessary here.
+              log.info("Successfully connected!");
+            }
+          });
 
 
-
-      return client;
     } catch (Exception e) {
-      log.info("Error occurred during returning client." );
-      return (Mqtt3AsyncClient) e;
+      log.info("Error occurred during create client and making connection." + e);
     }
 
   }
 
   //Connect
-  @Override
+/*  @Override
   public void connect(Mqtt3AsyncClient client) throws Exception {
     log.info("trying to connect client.");
     try {
@@ -126,16 +113,16 @@ public class SendDataWithMqttViaHiveMQ implements SendDataWithMqttViaHiveMQServi
       e.printStackTrace();
     }
     log.info("client successfully connected.");
-  }
+  }*/
 
   @Override
   public void publishHiveMQ(String data) throws MqttException {
 
     String time = new Timestamp(System.currentTimeMillis()).toString();
-    log.info("Publishing at: " +time+ " to topic \""+ channel +"\" qos " + qos);
+    log.info("Publishing at: " +time+ " to topic \""+ channelHiveMq +"\" qos " + qos);
 
     client.publishWith()
-        .topic(channel)
+        .topic(channelHiveMq)
         .payload(data.getBytes())
         .qos(MqttQos.fromCode(qos))
         .retain(true)
@@ -145,7 +132,7 @@ public class SendDataWithMqttViaHiveMQ implements SendDataWithMqttViaHiveMQServi
             log.info("Error during publish!");
             throwable.printStackTrace();
           } else {
-            // Handle successful publish, e.g. logging or incrementing a metric
+            log.info("Successfully published data" );
           }
         });
 

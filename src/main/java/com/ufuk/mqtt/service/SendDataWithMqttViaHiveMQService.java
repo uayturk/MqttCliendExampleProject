@@ -7,9 +7,9 @@ import org.springframework.boot.configurationprocessor.json.JSONException;
 
 public interface SendDataWithMqttViaHiveMQService {
 
-  Mqtt3AsyncClient createClientHiveMQ() throws IOException, JSONException;
+  void createClientAndConnectHiveMQ() throws IOException, JSONException;
 
-  void connect(Mqtt3AsyncClient client) throws Exception;
+  //void connect(Mqtt3AsyncClient client) throws Exception;
 
   void publishHiveMQ(String data) throws MqttException;
 
