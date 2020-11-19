@@ -13,9 +13,19 @@ public class MqttImpl implements MqttRunService {
   @Autowired
   public SendDataWithMqtt sendDataWithMqtt;
 
+  @Autowired
+  public SendDataWithMqttViaHiveMQ sendDataWithMqttViaHiveMQ;
+
+  //publish for paho mqtt
   @Override
   public void publish() throws MqttException {
     //sendDataWithMqtt.startConnectionAndSendDataWithMqtt();
-    sendDataWithMqtt.publish("field1=23");
+    sendDataWithMqtt.publish("field1=34");
+  }
+
+  //publish for HiveMQ mqtt
+  @Override
+  public void publishHiveMQ() throws MqttException {
+    sendDataWithMqttViaHiveMQ.publishHiveMQ("field1=34");
   }
 }

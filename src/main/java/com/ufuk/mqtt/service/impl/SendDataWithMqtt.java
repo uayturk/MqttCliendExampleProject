@@ -45,6 +45,7 @@ public class SendDataWithMqtt implements SendDataWithMqttService {
     log.info("trying to start mqtt protocol via paho ");
 
     String tmpDir = System.getProperty("java.io.tmpdir");
+
     MqttDefaultFilePersistence dataStore = new MqttDefaultFilePersistence(tmpDir);
 
     try {
@@ -53,7 +54,7 @@ public class SendDataWithMqtt implements SendDataWithMqttService {
       conOpt.setCleanSession(true);
       log.info("dataStore :  " +  dataStore);
       client = new MqttClient(brokerUrl, MqttClient.generateClientId(), dataStore);
-
+      log.info("Successfully create client: " + client);
       client.setCallback(new MqttCallback() {
 
         @Override

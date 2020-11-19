@@ -6,4 +6,6 @@ public interface MqttRunService {
 
   void publish() throws MqttException;
 
+  void publishHiveMQ() throws MqttException;
+
 }
