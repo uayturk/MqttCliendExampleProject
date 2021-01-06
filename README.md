@@ -45,5 +45,5 @@ Now you need to follow these steps under [3.link](http://www.hivemq.com/demos/we
 
 ***IDE***
 
-<br/>For this service we used smart IDE intellij and you can easily start our spring boot application from ```src/main/java/com.ufuk.weatherApi/WeatherApiApplication``` class.
+<br/>For this service we used smart IDE intellij and you can easily start our spring boot application from ```src/main/java/com.ufuk.mqtt/MqttApplication.java``` class.
 
